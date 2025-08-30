@@ -1,5 +1,5 @@
 
-from capintel.providers.polygon_client import _norm_crypto_pair
+from capital.providers.polygon_client import _norm_crypto_pair
 
 def test_norm_crypto_pair():
     assert _norm_crypto_pair("BTCUSD") == ("BTC","USD")

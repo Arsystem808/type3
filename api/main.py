@@ -3,9 +3,9 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from pydantic import BaseModel
-from capintel.signal_engine import build_signal
-from capintel.schemas import Signal, AssetClass, Horizon
-from capintel.backtest import toy_backtest
+from capital.signal_engine import build_signal
+from capital.schemas import Signal, AssetClass, Horizon
+from capital.backtest import toy_backtest
 
 app = FastAPI(title="CapIntel Signals API", version="0.1.0")
 

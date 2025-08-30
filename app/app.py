@@ -10,13 +10,13 @@ if ROOT_DIR not in sys.path:
 
 import streamlit as st
 from datetime import datetime
-from capintel.signal_engine import build_signal
-from capintel.providers.polygon_client import get_last_price, PolygonError
-from capintel.backtest import toy_backtest
+from capital.signal_engine import build_signal
+from capital.providers.polygon_client import get_last_price, PolygonError
+from capital.backtest import toy_backtest
 
 st.set_page_config(page_title="CapIntel — Signals", page_icon="📈", layout="wide")
 
-st.title("📈 CapIntel — Идеи для Crypto & Equities (MVP)")
+st.title("📈 CapItal — Идеи для Crypto & Equities (MVP)")
 st.caption("Формат: BUY / SHORT / CLOSE / WAIT + уровни входа/целей/стопа, confidence и сценарии.")
 
 with st.sidebar:

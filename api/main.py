@@ -1,0 +1,49 @@
+
+from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
+from pydantic import BaseModel
+from capintel.signal_engine import build_signal
+from capintel.schemas import Signal, AssetClass, Horizon
+from capintel.backtest import toy_backtest
+
+app = FastAPI(title="CapIntel Signals API", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class SignalRequest(BaseModel):
+    ticker: str
+    asset_class: AssetClass
+    horizon: Horizon
+    last_price: float
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.post("/signal", response_model=Signal)
+def create_signal(req: SignalRequest):
+    sig = build_signal(req.ticker, req.asset_class, req.horizon, req.last_price)
+    return sig
+
+@app.post("/backtest")
+def run_backtest(sig: Signal):
+    return toy_backtest(sig)
+
+
+from fastapi import HTTPException
+from capintel.providers.polygon_client import get_last_price, PolygonError
+
+@app.get("/price")
+def fetch_price(asset_class: AssetClass, ticker: str):
+    try:
+        price = get_last_price(asset_class, ticker)
+        return {"ticker": ticker.upper(), "asset_class": asset_class, "last_price": price}
+    except PolygonError as e:
+        raise HTTPException(status_code=400, detail=str(e))
